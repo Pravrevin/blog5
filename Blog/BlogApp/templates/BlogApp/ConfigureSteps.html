@@ -1,0 +1,156 @@
+{% extends 'BlogApp\base.html' %}
+{%load static%}
+{% block content %}
+
+<body class="bg-light">
+
+    <div class="container">
+    <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+    <form action="workflowStepDetail" method="POST">
+  <div class="form-group">
+      {% csrf_token %}
+    <label for="examplseInputEmail1">Step Name</label>
+    <input type="text" name="stepName" class="form-control form-control-sm"  placeholder="Step name">
+    <br>
+    <label for="examplseInputEmail1">Step Type</label>
+    <input type="text" name="stepType" class="form-control form-control-sm"  placeholder="Step type">
+
+  </div>
+<div class="form-group">
+<label >Operation Variable </label>
+
+      <button id="append_Operation_Variable" class="btn btn-primary btn-sm" style="float:right;"> Add Step</button>
+      <br/>
+  </div>
+  <div class="form-group mydiv">
+      <div class="controls">
+       <input type="text" name="OperationVariable[]" class="form-control form-control-sm" placeholder="Enter operation variable " style="width:89.5%; display:inline;">  <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
+      <br/>
+          <br/>
+      </div>
+  </div>
+        <div class="form-group">
+<label >Reader </label>
+
+      <button id="append_Reader" class="btn btn-primary btn-sm" style="float:right;"> Add Step</button>
+      <br/>
+  </div>
+  <div class="form-group mydivReader">
+      <div class="controls">
+          <select name="Select_reader[]" class="form-control form-control-sm" style="width:89.5%; display:inline;">
+    <option value="Select reader">Select reader</option>
+    <option value="Firefox">Firefox</option>
+    <option value="Chrome">Chrome</option>
+    <option value="Opera">Opera</option>
+    <option value="Safari">Safari</option>
+    </select>
+       <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
+      <br/>
+          <br/>
+      </div>
+  </div>
+        <div class="form-group">
+<label >Processor </label>
+
+      <button id="append_Processor" class="btn btn-primary btn-sm" style="float:right;"> Add Step</button>
+      <br/>
+
+  </div>
+  <div class="form-group mydivProcessor">
+      <div class="controls">
+       <select name="selectProcessor[]" class="form-control form-control-sm" style="width:89.5%; display:inline;">
+    <option value="Select processor">Select processor</option>
+    <option value="Firefox">Firefox</option>
+    <option value="Chrome">Chrome</option>
+    <option value="Opera">Opera</option>
+    <option value="Safari">Safari</option>
+    </select>  <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
+      <br/>
+          <br/>
+      </div>
+  </div>
+        <div class="form-group">
+<label >Writer</label>
+
+      <button id="append_Writer" class="btn btn-primary btn-sm" style="float:right;"> Add Step</button>
+      <br/>
+
+  </div>
+  <div class="form-group mydivWriter">
+      <div class="controls">
+       <select name="selectWriter[]" class="form-control form-control-sm" style="width:89.5%; display:inline;">
+    <option value="Select Reader">Select Writer</option>
+    <option value="Firefox">Firefox</option>
+    <option value="Chrome">Chrome</option>
+    <option value="Opera">Opera</option>
+    <option value="Safari">Safari</option>
+    </select>  <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
+      <br/>
+          <br/>
+      </div>
+  </div>
+
+
+  <div class="form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+      </div>
+    <div class=col-sm-2></div>
+    </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript">
+jQuery(document).ready( function () {
+
+        $("#append_Operation_Variable").click( function(e) {
+         e.preventDefault();
+        $(".mydiv").append('<div class="controls"><input type="text" name="OperationVariable[]"  class="form-control form-control-sm" placeholder="Enter operation variable" style="width:89.5%; display:inline;">  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+        return false;
+        });
+
+        $("#append_Reader").click( function(e) {
+         e.preventDefault();
+        $(".mydivReader").append('<div class="controls"><select name="Select_reader[]" class="form-control form-control-sm" style="width:89.5%; display:inline;"><option value="Select Reader">Select Reader</option><option value="Firefox">Firefox</option><option value="Chrome">Chrome</option><option value="Opera">Opera</option><option value="Safari">Safari</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+        return false;
+        });
+
+        $("#append_Processor").click( function(e) {
+         e.preventDefault();
+        $(".mydivProcessor").append('<div class="controls"><select name="selectProcessor[]" class="form-control form-control-sm" style="width:89.5%; display:inline;"><option value="Select processor">Select processor</option><option value="Firefox">Firefox</option><option value="Chrome">Chrome</option><option value="Opera">Opera</option><option value="Safari">Safari</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+        return false;
+        });
+
+        $("#append_Writer").click( function(e) {
+         e.preventDefault();
+        $(".mydivWriter").append('<div class="controls"><select name="selectWriter[]" class="form-control form-control-sm" style="width:89.5%; display:inline;"><option value="Select Writer">Select writer</option><option value="Firefox">Firefox</option><option value="Chrome">Chrome</option><option value="Opera">Opera</option><option value="Safari">Safari</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+        return false;
+        });
+
+    jQuery(document).on('click', '.remove_this', function() {
+        jQuery(this).parent().remove();
+        return false;
+        });
+    $("input[type=submit]").click(function(e) {
+      e.preventDefault();
+      $(this).next("[name=textbox]")
+      .val(
+        $.map($(".inc :text"), function(el) {
+          return el.value
+        }).join(",\n")
+      )
+    })
+  });
+</script>
+
+</body>
+
+{% endblock %}
