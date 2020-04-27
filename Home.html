@@ -1,0 +1,355 @@
+{% extends 'BlogApp\base.html' %}
+{%load static%}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/blog/main.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/blog.css' %}">
+<body class="bg-light">
+
+    <div class="container">
+   <center> <h3>Form</h3> </center>
+   <br />
+
+    <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+    <form action="workflow" method="POST">
+        {% csrf_token %}
+  <div class="form-group" >
+
+    <label for="examplseInputEmail1">Name</label>
+
+    <input type="text" class="form-control form-control-sm" name="name" id="name"  placeholder="Enter name" value="{{name_return}}">
+
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Description</label>
+    <textarea class="form-control form-control-sm" name="description" > </textarea>
+  </div>
+<div class="form-group">
+<label >Step </label>
+
+      <button id="appendStep" class="btn btn-primary btn-sm" style="float:right;"> Add Step</button>
+      <br/>
+  </div>
+  <div class="form-group mydivStep">
+      <div class="controls">
+       <input type="text" class="form-control form-control-sm" id="stepid" name="step[]" required placeholder="Enter step" style="width:78%; display:inline;">
+       <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
+      <a href="#" style="display:inline;" id="myBtn" class="btn btn-warning btn-sm active myconfigure" role="button" aria-pressed="true" onclick="getConfigBtnId(this.id)">Configure</a>
+      <br/>
+      <br/>
+      </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+      </div>
+    <div class=col-sm-2></div>
+    </div>
+    </div>
+
+    <div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+
+    <span class="close">&times;</span>
+      <div style="height:400px; width:100%; overflow:scroll;">
+
+<div class="container">
+    <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+    <form id="workFlowStepDetails" method="POST">
+  <div class="form-group">
+      {% csrf_token %}
+
+    <label for="examplseInputEmail1">Step Name</label>
+    <input type="text" name="stepName" id="stepname" class="form-control form-control-sm"  placeholder="Step name">
+      <input type="hidden" name="foldername" id="foldername" class="form-control form-control-sm"  placeholder="Step name">
+    <br>
+    <label for="examplseInputEmail1">Step Type</label>
+    <input type="text" name="stepType" id="steptype" class="form-control form-control-sm"  placeholder="Step type">
+
+  </div>
+<div class="form-group">
+<label >Operation Variable </label>
+
+      <button id="append_Operation_Variable" class="btn btn-primary btn-sm" style="float:right;"> Add Step</button>
+      <br/>
+  </div>
+  <div class="form-group mydiv">
+      <div class="controls">
+       <input type="text" name="OperationVariable[]" id="operationvariable" class="form-control form-control-sm" placeholder="Enter operation variable " style="width:89.5%; display:inline;">  <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
+      <br/>
+          <br/>
+      </div>
+  </div>
+        <div class="form-group">
+<label >Reader </label>
+
+      <button id="append_Reader" class="btn btn-primary btn-sm" style="float:right;"> Add Step</button>
+      <br/>
+  </div>
+  <div class="form-group mydivReader">
+      <div class="controls">
+          <select name="Select_reader[]" id="reader" class="form-control form-control-sm" style="width:89.5%; display:inline;">
+    <option value="Select reader">Select reader</option>
+    <option value="Firefox">Firefox</option>
+    <option value="Chrome">Chrome</option>
+    <option value="Opera">Opera</option>
+    <option value="Safari">Safari</option>
+    </select>
+       <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
+      <br/>
+          <br/>
+      </div>
+  </div>
+        <div class="form-group">
+<label >Processor </label>
+
+      <button id="append_Processor" class="btn btn-primary btn-sm" style="float:right;"> Add Step</button>
+      <br/>
+
+  </div>
+  <div class="form-group mydivProcessor">
+      <div class="controls">
+       <select name="selectProcessor[]" id="processor" class="form-control form-control-sm" style="width:89.5%; display:inline;">
+    <option value="Select processor">Select processor</option>
+    <option value="Firefox">Firefox</option>
+    <option value="Chrome">Chrome</option>
+    <option value="Opera">Opera</option>
+    <option value="Safari">Safari</option>
+    </select>  <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
+      <br/>
+          <br/>
+      </div>
+  </div>
+        <div class="form-group">
+<label >Writer</label>
+
+      <button id="append_Writer" class="btn btn-primary btn-sm" style="float:right;"> Add Step</button>
+      <br/>
+
+  </div>
+  <div class="form-group mydivWriter">
+      <div class="controls">
+       <select name="selectWriter[]" id="writer" class="form-control form-control-sm" style="width:89.5%; display:inline;">
+    <option value="Select Reader">Select Writer</option>
+    <option value="Firefox">Firefox</option>
+    <option value="Chrome">Chrome</option>
+    <option value="Opera">Opera</option>
+    <option value="Safari">Safari</option>
+    </select>  <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
+      <br/>
+          <br/>
+      </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+      </div>
+    <div class=col-sm-2></div>
+    </div>
+    </div>
+
+
+      </div>
+  </div>
+
+</div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript">
+{% comment %}var stepArray=new Array();{% endcomment %}
+var count=0;
+var uniqueID=0;
+var configBtnId='';
+var stepDetails = new Map();
+var myMap = new Map();
+
+function openConfigure(configId){
+    if(stepDetails.has(configId)) {
+        var configStepDetails = stepDetails.get(configId);
+        var sName = configStepDetails.get("stepName");
+        var sType = configStepDetails.get("stepType");
+        var sOp = configStepDetails.get("opVariable");
+        var sReader = configStepDetails.get("reader");
+        var sProcessor = configStepDetails.get("processor");
+        var sWriter = configStepDetails.get("writer");
+
+        document.getElementById("stepname").value = sName;
+        document.getElementById("steptype").value = sType;
+        document.getElementById("operationvariable").value = sOp;
+        document.getElementById("reader").value = sReader;
+        document.getElementById("processor").value = sProcessor;
+        document.getElementById("writer").value = sWriter;
+    }
+}
+
+function getConfigBtnId(id){
+    configBtnId = id;
+}
+
+$(document).ready( function () {
+        console.log(configBtnId);
+        $(document).on('click', '.myconfigure', function() {
+        stepid=$(this).parent().find('input').val();
+        document.getElementById("workFlowStepDetails").reset();
+        {% comment %}var configureElem = document.getElementsByClassName("myconfigure")[0].id;{% endcomment %}
+        {% comment %}console.log(configureElem);{% endcomment %}
+        if(stepDetails.size >= 1 && configBtnId === 'myBtn') {
+            openConfigure(configBtnId);
+        }else{
+            if(stepDetails.size > 1){
+                openConfigure(configBtnId);
+                //console.log(sName);
+            }
+        }
+        // below code is modal code
+
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        modal.style.display = "block";
+        name = $('#name').val();
+
+        document.getElementById("stepname").value = stepid;
+        document.getElementById("foldername").value = name;
+        document.getElementById("name").value = name;
+
+        //code end
+
+
+        });
+
+        $("#appendStep").click( function(e) {
+         e.preventDefault()
+            uniqueID = uniqueID+1;
+        $(".mydivStep").append('<div class="controls"><input type="text" name="step[]" required class="form-control form-control-sm" placeholder="Enter step" style="width:78%; display:inline;">  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <button href="#" style="display:inline;" id="configBtn_' + uniqueID +'" class="btn btn-warning btn-sm active myconfigure" type=button role="button" aria-pressed="true" onclick="getConfigBtnId(this.id)">Configure</button><br/><br/></div>');
+        {#$(".myconfigure").attr("id", "configBtn_"+configCount);#}
+
+        return false;
+
+        });
+    $("#workFlowStepDetails").submit( function(e) {
+        e.preventDefault();
+        console.log("Count : "+count);
+
+    var stepname = $('#stepname').val();
+    var steptype = $('#steptype').val();
+    var operationVariable = $('#operationvariable').val();
+    var reader = $('#reader').val();
+    var processor = $('#processor').val();
+    var writer = $('#writer').val();
+
+    if(myMap.size !== 0 && stepname !== myMap.get("stepName")) {
+        myMap = new Map();
+    }
+myMap.set("stepName", stepname);
+myMap.set("stepType", steptype);
+myMap.set("opVariable", operationVariable);
+myMap.set("reader", reader);
+myMap.set("processor", processor);
+myMap.set("writer", writer);
+{% comment %}stepArray[count] = myMap;{% endcomment %}
+        stepDetails.set(configBtnId, myMap);
+count=count+1;
+console.log("New Count : "+count);
+modal.style.display = "none";
+    });
+
+    $(document).on('click', '.remove_this', function() {
+        jQuery(this).parent().remove();
+        return false;
+        });
+
+    $("input[type=submit]").click(function(e) {
+       e.preventDefault();
+       $(this).next("[name=textbox]")
+       .val(
+        $.map($(".inc :text"), function(el) {
+          return el.value
+        }).join(",\n")
+      )
+    })
+  });
+/*
+function blockModel() {
+  modal.style.display = "block";
+  name = $('#name').val();
+      //  stepid = $('#stepid').val();
+        document.getElementById("stepname").value = stepid;
+        document.getElementById("foldername").value = name;
+}
+*/
+var modal = document.getElementById("myModal");
+var span = document.getElementsByClassName("close")[0];
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+
+}
+
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+// Down code for configure code
+
+jQuery(document).ready( function () {
+
+        $("#append_Operation_Variable").click( function(e) {
+         e.preventDefault();
+        $(".mydiv").append('<div class="controls"><input type="text" name="OperationVariable[]"  class="form-control form-control-sm" placeholder="Enter operation variable" style="width:89.5%; display:inline;">  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+        return false;
+        });
+
+        $("#append_Reader").click( function(e) {
+         e.preventDefault();
+        $(".mydivReader").append('<div class="controls"><select name="Select_reader[]" class="form-control form-control-sm" style="width:89.5%; display:inline;"><option value="Select Reader">Select Reader</option><option value="Firefox">Firefox</option><option value="Chrome">Chrome</option><option value="Opera">Opera</option><option value="Safari">Safari</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+        return false;
+        });
+
+        $("#append_Processor").click( function(e) {
+         e.preventDefault();
+        $(".mydivProcessor").append('<div class="controls"><select name="selectProcessor[]" class="form-control form-control-sm" style="width:89.5%; display:inline;"><option value="Select processor">Select processor</option><option value="Firefox">Firefox</option><option value="Chrome">Chrome</option><option value="Opera">Opera</option><option value="Safari">Safari</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+        return false;
+        });
+
+        $("#append_Writer").click( function(e) {
+         e.preventDefault();
+        $(".mydivWriter").append('<div class="controls"><select name="selectWriter[]" class="form-control form-control-sm" style="width:89.5%; display:inline;"><option value="Select Writer">Select writer</option><option value="Firefox">Firefox</option><option value="Chrome">Chrome</option><option value="Opera">Opera</option><option value="Safari">Safari</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+        return false;
+        });
+
+    jQuery(document).on('click', '.remove_this', function() {
+        jQuery(this).parent().remove();
+        return false;
+        });
+    $("input[type=submit]").click(function(e) {
+      e.preventDefault();
+      $(this).next("[name=textbox]")
+      .val(
+        $.map($(".inc :text"), function(el) {
+          return el.value
+        }).join(",\n")
+      )
+    })
+  });
+
+</script>
+
+</body>
+
+{% endblock %}
