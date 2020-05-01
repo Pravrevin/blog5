@@ -12,7 +12,7 @@
     <div class="row">
     <div class="col-sm-2"></div>
     <div class="col-sm-8">
-    <form action="workflow" method="POST">
+    <form id="workflow" method="POST">
         {% csrf_token %}
   <div class="form-group" >
 
@@ -35,7 +35,7 @@
       <div class="controls">
        <input type="text" class="form-control form-control-sm" id="stepid" name="step[]" required placeholder="Enter step" style="width:78%; display:inline;">
        <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
-      <a href="#" style="display:inline;" id="myBtn" class="btn btn-warning btn-sm active myconfigure" role="button" aria-pressed="true" onclick="getConfigBtnId(this.id)">Configure</a>
+      <a href="#" style="display:inline;" id="configBtn_0" class="btn btn-warning btn-sm active myconfigure" role="button" aria-pressed="true" onclick="getConfigBtnId(this.id)">Configure</a>
       <br/>
       <br/>
       </div>
@@ -81,7 +81,7 @@
   </div>
   <div class="form-group mydiv">
       <div class="controls">
-       <input type="text" name="OperationVariable[]" id="operationvariable" class="form-control form-control-sm" placeholder="Enter operation variable " style="width:89.5%; display:inline;">  <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
+       <input type="text" name="OperationVariable[]" id="operationvariable" class="form-control form-control-sm opvar" placeholder="Enter operation variable " style="width:89.5%; display:inline;" onblur="getElementId(this.id)">  <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
       <br/>
           <br/>
       </div>
@@ -94,12 +94,12 @@
   </div>
   <div class="form-group mydivReader">
       <div class="controls">
-          <select name="Select_reader[]" id="reader" class="form-control form-control-sm" style="width:89.5%; display:inline;">
+          <select name="Select_reader[]" id="reader_0" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="getElementId(this.id)">
     <option value="Select reader">Select reader</option>
-    <option value="Firefox">Firefox</option>
-    <option value="Chrome">Chrome</option>
-    <option value="Opera">Opera</option>
-    <option value="Safari">Safari</option>
+    <option value="OracleDataRead(SOURCEIDENTIFIER,SOURCENAME,GETSOURCESQL)">OracleDataRead(SOURCEIDENTIFIER,SOURCENAME,GETSOURCESQL)</option>
+    <option value="CSVDataRead(SOURCEIDENTIFIER,SOURCEFILENAME,FILEPATH)">CSVDataRead(SOURCEIDENTIFIER,SOURCEFILENAME,FILEPATH)</option>
+    <option value="EXCELDataRead(SOURCEIDENTIFIER,SOURCEFILEPATH,PATTERN)">EXCELDataRead(SOURCEIDENTIFIER,SOURCEFILEPATH,PATTERN)</option>
+    <option value="SftpRead(SOURCEREMOTESERVERNAME,SOURCEREMOTEPORTNO,SOURCEREMOTEUSERNAME,SOURCEREMOTEPASSWORD,SOURCELOCALFILEPATH,SOURCEREMOTEFILENAME)">SftpRead(SOURCEREMOTESERVERNAME,SOURCEREMOTEPORTNO,SOURCEREMOTEUSERNAME,SOURCEREMOTEPASSWORD,SOURCELOCALFILEPATH,SOURCEREMOTEFILENAME)</option>
     </select>
        <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
       <br/>
@@ -115,12 +115,11 @@
   </div>
   <div class="form-group mydivProcessor">
       <div class="controls">
-       <select name="selectProcessor[]" id="processor" class="form-control form-control-sm" style="width:89.5%; display:inline;">
+       <select name="selectProcessor[]" id="processor_0" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="getElementId(this.id)">
     <option value="Select processor">Select processor</option>
-    <option value="Firefox">Firefox</option>
-    <option value="Chrome">Chrome</option>
-    <option value="Opera">Opera</option>
-    <option value="Safari">Safari</option>
+    <option value="PythonDataProcessor(SCRIPTNAME,METHOD)">PythonDataProcessor(SCRIPTNAME,METHOD)</option>
+    <option value="FileChecker(FOLDERPATH,PATTERN,SCHEDULESTOPPER)">FileChecker(FOLDERPATH,PATTERN,SCHEDULESTOPPER)</option>
+    <option value="FILEMOVEPROCCESOR(SOURCEFILENAME,TARGETFILENAME,MOVETYPE,PATTERN)">FILEMOVEPROCCESOR(SOURCEFILENAME,TARGETFILENAME,MOVETYPE,PATTERN)</option>
     </select>  <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
       <br/>
           <br/>
@@ -135,12 +134,12 @@
   </div>
   <div class="form-group mydivWriter">
       <div class="controls">
-       <select name="selectWriter[]" id="writer" class="form-control form-control-sm" style="width:89.5%; display:inline;">
+       <select name="selectWriter[]" id="writer_0" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="getElementId(this.id)">
     <option value="Select Reader">Select Writer</option>
-    <option value="Firefox">Firefox</option>
-    <option value="Chrome">Chrome</option>
-    <option value="Opera">Opera</option>
-    <option value="Safari">Safari</option>
+    <option value="EXCELDATAWRITER(INPUTSOURCEFORWRITER,FILENAME,FILEPATH,SHEETNAME,HEADERREQUIRED)">EXCELDATAWRITER(INPUTSOURCEFORWRITER,FILENAME,FILEPATH,SHEETNAME,HEADERREQUIRED)</option>
+    <option value="CSVDataWrite(INPUTSOURCEFORWRITER,TARGETFILENAME,TARGETDELIMITER,FILEPATH)">CSVDataWrite(INPUTSOURCEFORWRITER,TARGETFILENAME,TARGETDELIMITER,FILEPATH)</option>
+    <option value="OracleDataWrite(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST)">OracleDataWrite(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST)</option>
+    <option value="OracleDataDelInsert(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST,DELETEKEY)">OracleDataDelInsert(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST,DELETEKEY)</option>
     </select>  <a href="#"  style="display:inline;" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a>
       <br/>
           <br/>
@@ -162,30 +161,101 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-<script type="text/javascript">
-{% comment %}var stepArray=new Array();{% endcomment %}
+
+
+    <script type="text/javascript">
+
 var count=0;
 var uniqueID=0;
+var opvarId=0;
+var readerId=0;
+var processorId=0;
+var writerId=0;
 var configBtnId='';
 var stepDetails = new Map();
 var myMap = new Map();
+var opvarMap;
+var readerMap;
+var processorMap;
+var writerMap;
+
+
 
 function openConfigure(configId){
     if(stepDetails.has(configId)) {
         var configStepDetails = stepDetails.get(configId);
         var sName = configStepDetails.get("stepName");
         var sType = configStepDetails.get("stepType");
-        var sOp = configStepDetails.get("opVariable");
-        var sReader = configStepDetails.get("reader");
-        var sProcessor = configStepDetails.get("processor");
-        var sWriter = configStepDetails.get("writer");
+        var sOp = new Map();
+        sOp = configStepDetails.get("opVariable");
+        //var sReader = configStepDetails.get("reader");
+        var sReader = new Map();
+        sReader = configStepDetails.get("reader");
+        var sProcessor = new Map();
+        sProcessor = configStepDetails.get("processor");
+        var sWriter = new Map();
+        sWriter = configStepDetails.get("writer");
 
         document.getElementById("stepname").value = sName;
         document.getElementById("steptype").value = sType;
-        document.getElementById("operationvariable").value = sOp;
-        document.getElementById("reader").value = sReader;
-        document.getElementById("processor").value = sProcessor;
-        document.getElementById("writer").value = sWriter;
+       // document.getElementById("operationvariable").value = sOp;
+        var sOpKeys = sOp.entries();
+        for(var keys of sOpKeys){
+            //for(var i=0;i<keys.length;i++){
+                document.getElementById(keys[0]).value = keys[1];
+            //}
+        }
+        var sReaderKeys = sReader.entries();
+        for(var keys of sReaderKeys){
+            //for(var i=0;i<keys.length;i++){
+                document.getElementById(keys[0]).value = keys[1];
+            //}
+        }
+         var sProcessorKeys = sProcessor.entries();
+        for(var keys of sProcessorKeys){
+            //for(var i=0;i<keys.length;i++){
+                document.getElementById(keys[0]).value = keys[1];
+            //}
+        }
+        var sWriterKeys = sWriter.entries();
+        for(var keys of sWriterKeys){
+            //for(var i=0;i<keys.length;i++){
+                document.getElementById(keys[0]).value = keys[1];
+            //}
+        }
+        //document.getElementById("reader").value = sReader;
+        //document.getElementById("processor").value = sProcessor;
+        //document.getElementById("writer").value = sWriter;
+    }
+}
+
+function getElementId(id){
+    var elemData = document.getElementById(id).value;
+    createElemMap(id, elemData);
+}
+
+function createElemMap(mapKey, keyValue){
+    if(mapKey.substr(0,2) === 'op'){
+        if(opvarMap === undefined){
+        opvarMap = new Map();
+    }
+        opvarMap.set(mapKey, keyValue);
+    }else if(mapKey.substr(0,2) === 're'){
+        if(readerMap === undefined){
+        readerMap = new Map();
+    }
+        readerMap.set(mapKey, keyValue);
+    }
+    if(mapKey.substr(0,2) === 'pr'){
+        if(processorMap === undefined){
+        processorMap = new Map();
+    }
+        processorMap.set(mapKey, keyValue);
+    }else if(mapKey.substr(0,2) === 'wr'){
+        if(writerMap === undefined){
+        writerMap = new Map();
+    }
+        writerMap.set(mapKey, keyValue);
     }
 }
 
@@ -195,12 +265,13 @@ function getConfigBtnId(id){
 
 $(document).ready( function () {
         console.log(configBtnId);
+
         $(document).on('click', '.myconfigure', function() {
         stepid=$(this).parent().find('input').val();
         document.getElementById("workFlowStepDetails").reset();
         {% comment %}var configureElem = document.getElementsByClassName("myconfigure")[0].id;{% endcomment %}
         {% comment %}console.log(configureElem);{% endcomment %}
-        if(stepDetails.size >= 1 && configBtnId === 'myBtn') {
+        if(stepDetails.size >= 1 && configBtnId === 'configBtn_0') {
             openConfigure(configBtnId);
         }else{
             if(stepDetails.size > 1){
@@ -225,8 +296,6 @@ $(document).ready( function () {
         document.getElementById("name").value = name;
 
         //code end
-
-
         });
 
         $("#appendStep").click( function(e) {
@@ -238,16 +307,39 @@ $(document).ready( function () {
         return false;
 
         });
+
+    $("#workflow").submit( function(e){
+        e.preventDefault();
+        $.ajax({
+            type:"POST",
+            url:"./Home/ajax/workflow/submit",
+            data:stepDetails,
+            dataType:"json",
+            success:function(data){
+                var data = data.get("configBtn_1");
+                var stepName = data.get("stepName");
+                var stepType = data.get("stepType");
+                console.log("Step Name : "+stepName+" :::: Step Type : "+stepType);
+                alert(data);
+            },
+            error:function(){
+                alert("data not received");
+            }
+        });
+    });
+
     $("#workFlowStepDetails").submit( function(e) {
         e.preventDefault();
         console.log("Count : "+count);
 
     var stepname = $('#stepname').val();
     var steptype = $('#steptype').val();
-    var operationVariable = $('#operationvariable').val();
-    var reader = $('#reader').val();
-    var processor = $('#processor').val();
-    var writer = $('#writer').val();
+    var operationVariable = opvarMap;
+    var reader = readerMap;
+    var processor = processorMap;
+    var writer = writerMap;
+    //var processor = $('#processor').val();
+    //var writer = $('#writer').val();
 
     if(myMap.size !== 0 && stepname !== myMap.get("stepName")) {
         myMap = new Map();
@@ -311,25 +403,30 @@ jQuery(document).ready( function () {
 
         $("#append_Operation_Variable").click( function(e) {
          e.preventDefault();
-        $(".mydiv").append('<div class="controls"><input type="text" name="OperationVariable[]"  class="form-control form-control-sm" placeholder="Enter operation variable" style="width:89.5%; display:inline;">  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+         opvarId = opvarId + 1;
+         //opvarMap = new Map();
+        $(".mydiv").append('<div class="controls"><input type="text" name="OperationVariable[]"  id="operationvariable_' + opvarId +'" class="form-control form-control-sm opvar" placeholder="Enter operation variable" style="width:89.5%; display:inline;" onblur="getElementId(this.id)">  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
         return false;
         });
 
         $("#append_Reader").click( function(e) {
          e.preventDefault();
-        $(".mydivReader").append('<div class="controls"><select name="Select_reader[]" class="form-control form-control-sm" style="width:89.5%; display:inline;"><option value="Select Reader">Select Reader</option><option value="Firefox">Firefox</option><option value="Chrome">Chrome</option><option value="Opera">Opera</option><option value="Safari">Safari</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+         readerId = readerId + 1;
+        $(".mydivReader").append('<div class="controls"><select name="Select_reader[]" id="reader_' + readerId +'" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="getElementId(this.id)"><option value="Select Reader">Select Reader</option><option value="OracleDataRead(SOURCEIDENTIFIER,SOURCENAME,GETSOURCESQL)">OracleDataRead(SOURCEIDENTIFIER,SOURCENAME,GETSOURCESQL)</option><option value="CSVDataRead(SOURCEIDENTIFIER,SOURCEFILENAME,FILEPATH)">CSVDataRead(SOURCEIDENTIFIER,SOURCEFILENAME,FILEPATH)</option><option value="EXCELDataRead(SOURCEIDENTIFIER,SOURCEFILEPATH,PATTERN)">EXCELDataRead(SOURCEIDENTIFIER,SOURCEFILEPATH,PATTERN)</option><option value="SftpRead(SOURCEREMOTESERVERNAME,SOURCEREMOTEPORTNO,SOURCEREMOTEUSERNAME,SOURCEREMOTEPASSWORD,SOURCELOCALFILEPATH,SOURCEREMOTEFILENAME)">SftpRead(SOURCEREMOTESERVERNAME,SOURCEREMOTEPORTNO,SOURCEREMOTEUSERNAME,SOURCEREMOTEPASSWORD,SOURCELOCALFILEPATH,SOURCEREMOTEFILENAME)</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
         return false;
         });
 
         $("#append_Processor").click( function(e) {
          e.preventDefault();
-        $(".mydivProcessor").append('<div class="controls"><select name="selectProcessor[]" class="form-control form-control-sm" style="width:89.5%; display:inline;"><option value="Select processor">Select processor</option><option value="Firefox">Firefox</option><option value="Chrome">Chrome</option><option value="Opera">Opera</option><option value="Safari">Safari</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+         processorId = processorId + 1;
+        $(".mydivProcessor").append('<div class="controls"><select name="selectProcessor[]" id="processor_' + processorId +'" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="getElementId(this.id)"><option value="Select processor">Select processor</option><option value="PythonDataProcessor(SCRIPTNAME,METHOD)">PythonDataProcessor(SCRIPTNAME,METHOD)</option><option value="FileChecker(FOLDERPATH,PATTERN,SCHEDULESTOPPER)">FileChecker(FOLDERPATH,PATTERN,SCHEDULESTOPPER)</option><option value="FILEMOVEPROCCESOR(SOURCEFILENAME,TARGETFILENAME,MOVETYPE,PATTERN)">FILEMOVEPROCCESOR(SOURCEFILENAME,TARGETFILENAME,MOVETYPE,PATTERN)</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
         return false;
         });
 
         $("#append_Writer").click( function(e) {
          e.preventDefault();
-        $(".mydivWriter").append('<div class="controls"><select name="selectWriter[]" class="form-control form-control-sm" style="width:89.5%; display:inline;"><option value="Select Writer">Select writer</option><option value="Firefox">Firefox</option><option value="Chrome">Chrome</option><option value="Opera">Opera</option><option value="Safari">Safari</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+         writerId = writerId + 1;
+        $(".mydivWriter").append('<div class="controls"><select name="selectWriter[]" id="writer_' + writerId +'" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="getElementId(this.id)"><option value="Select Writer">Select writer</option><option value="EXCELDATAWRITER(INPUTSOURCEFORWRITER,FILENAME,FILEPATH,SHEETNAME,HEADERREQUIRED)">EXCELDATAWRITER(INPUTSOURCEFORWRITER,FILENAME,FILEPATH,SHEETNAME,HEADERREQUIRED)</option><option value="CSVDataWrite(INPUTSOURCEFORWRITER,TARGETFILENAME,TARGETDELIMITER,FILEPATH)">CSVDataWrite(INPUTSOURCEFORWRITER,TARGETFILENAME,TARGETDELIMITER,FILEPATH)</option><option value="OracleDataWrite(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST)">OracleDataWrite(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST)</option><option value="OracleDataDelInsert(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST,DELETEKEY)">OracleDataDelInsert(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST,DELETEKEY)</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
         return false;
         });
 
