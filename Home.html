@@ -61,10 +61,11 @@
 <div class="container">
     <div class="row">
     <div class="col-sm-2"></div>
-    <div class="col-sm-8">
+    <div class="col-sm-8" id="mainForm">
     <form id="workflowStepDetail" method="POST">
+        {% csrf_token %}
   <div class="form-group">
-      {% csrf_token %}
+
 
     <label for="examplseInputEmail1">Step Name</label>
     <input type="text" name="stepName" id="stepname" class="form-control form-control-sm"  placeholder="Step name">
@@ -96,7 +97,7 @@
   <div class="form-group mydivReader">
       <div class="controls">
           <select name="Select_reader[]" id="reader_0" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="addReader(this.id)">
-    <option value="Select reader">Select reader</option>
+    <option value="">Select reader</option>
     <option value="OracleDataRead(SOURCEIDENTIFIER,SOURCENAME,GETSOURCESQL)">OracleDataRead(SOURCEIDENTIFIER,SOURCENAME,GETSOURCESQL)</option>
     <option value="CSVDataRead(SOURCEIDENTIFIER,SOURCEFILENAME,FILEPATH)">CSVDataRead(SOURCEIDENTIFIER,SOURCEFILENAME,FILEPATH)</option>
     <option value="EXCELDataRead(SOURCEIDENTIFIER,SOURCEFILEPATH,PATTERN)">EXCELDataRead(SOURCEIDENTIFIER,SOURCEFILEPATH,PATTERN)</option>
@@ -107,6 +108,7 @@
           <br/>
       </div>
   </div>
+        <div class='form-group mydivReaderParam' id='rParamDiv_0'></div>
         <div class="form-group">
 <label >Processor </label>
 
@@ -117,7 +119,7 @@
   <div class="form-group mydivProcessor">
       <div class="controls">
        <select name="selectProcessor[]" id="processor_0" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="addProcessor(this.id)">
-    <option value="Select processor">Select processor</option>
+    <option value="">Select processor</option>
     <option value="PythonDataProcessor(SCRIPTNAME,METHOD)">PythonDataProcessor(SCRIPTNAME,METHOD)</option>
     <option value="FileChecker(FOLDERPATH,PATTERN,SCHEDULESTOPPER)">FileChecker(FOLDERPATH,PATTERN,SCHEDULESTOPPER)</option>
     <option value="FILEMOVEPROCCESOR(SOURCEFILENAME,TARGETFILENAME,MOVETYPE,PATTERN)">FILEMOVEPROCCESOR(SOURCEFILENAME,TARGETFILENAME,MOVETYPE,PATTERN)</option>
@@ -126,6 +128,7 @@
           <br/>
       </div>
   </div>
+        <div class='form-group mydivProcessorParam' id='pParamDiv_0'></div>
         <div class="form-group">
 <label >Writer</label>
 
@@ -136,7 +139,7 @@
   <div class="form-group mydivWriter">
       <div class="controls">
        <select name="selectWriter[]" id="writer_0" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="addWriter(this.id)">
-    <option value="Select Reader">Select Writer</option>
+    <option value="">Select Writer</option>
     <option value="EXCELDATAWRITER(INPUTSOURCEFORWRITER,FILENAME,FILEPATH,SHEETNAME,HEADERREQUIRED)">EXCELDATAWRITER(INPUTSOURCEFORWRITER,FILENAME,FILEPATH,SHEETNAME,HEADERREQUIRED)</option>
     <option value="CSVDataWrite(INPUTSOURCEFORWRITER,TARGETFILENAME,TARGETDELIMITER,FILEPATH)">CSVDataWrite(INPUTSOURCEFORWRITER,TARGETFILENAME,TARGETDELIMITER,FILEPATH)</option>
     <option value="OracleDataWrite(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST)">OracleDataWrite(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST)</option>
@@ -146,6 +149,7 @@
           <br/>
       </div>
   </div>
+        <div class='form-group mydivWriterParam' id='wParamDiv_0'></div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 

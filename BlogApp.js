@@ -16,6 +16,11 @@ var writer;
 var writerid=0;
 var configIdIndex;
 var _dirtyFlag=false;
+var modalHtml = "";
+var readerObj;
+var processorObj;
+var writerObj;
+
 
 function getElemIdSeq(elemId){
     var indexArr = elemId.split('_');
@@ -41,22 +46,139 @@ function addOperationVariable(elemId){
 function addProcessor(elemId) {
     var elemVal = $("#"+elemId).val();
     var index = getElemIdSeq(elemId);
-    processor[index] = elemVal;
+    processorObj = {};
+        processorObj.value = elemVal;
+        processorObj.params = [];
+        processor[index] = processorObj;
+
+    if(elemVal !== "" ) {
+        createProParamFields(elemId,elemVal, index);
+    }else{
+        $("#pmaindiv").remove();
+        $("#pParamDiv").hide();
+    }
     console.log("addProcessor method, element Id : "+elemId +" Index : "+index);
+}
+
+function addProcessorParamValues(fId){
+var labelId = $("#"+fId)[0].previousSibling.id;
+var labelVal = $("#"+labelId)[0].innerHTML;
+var fVal = $("#"+fId).val();
+processorObj.params.push({"label": labelVal, "value":fVal});
+console.log(labelId);
+}
+
+function createProParamFields(elemId,elemVal, index){
+
+    $("#pmaindiv"+index).remove();
+    var paramString = (elemVal.split("("))[1];
+    var params=[];
+    params = paramString.split(",");
+    $("#pParamDiv_"+index).show();
+    var parentDiv = document.getElementById("pParamDiv_"+index);
+    var maindiv= document.createElement('div');
+    maindiv.id = "pmaindiv_"+index;
+    parentDiv.appendChild(maindiv);
+    for(var i=0; i<params.length; i++){
+            var newdiv = document.createElement('div');
+            newdiv.id = "div";
+            newdiv.innerHTML = "<label id='pPLabel"+index+"_" +i+"'>params label</label><input type='text' id='pParam"+index+"_" + i + "' class='form-control form-control-sm' style=\"width:89.5%; display:inline;\" onblur='addProcessorParamValues(this.id)'>"
+            maindiv.appendChild(newdiv);
+            $("#pPLabel"+index+"_"+i).text(params[i].replace(")", ""));
+        }
 }
 
 function addReader(elemId) {
     var elemVal = $("#"+elemId).val();
     var index = getElemIdSeq(elemId);
-    reader[index] = elemVal;
+    readerObj = {};
+        readerObj.value = elemVal;
+        readerObj.params = [];
+        reader[index] = readerObj;
     console.log("addReader method, element Id : "+elemId +" Index : "+index);
+
+    if(elemVal !== "" ) {
+        createParamFields(elemId,elemVal, index);
+    }else{
+        $("#maindiv").remove();
+        $("#rParamDiv").hide();
+    }
+}
+
+function addReaderParamValues(fId){
+var labelId = $("#"+fId)[0].previousSibling.id;
+var labelVal = $("#"+labelId)[0].innerHTML;
+var fVal = $("#"+fId).val();
+readerObj.params.push({"label": labelVal, "value":fVal});
+
+//readerParamMap.set(labelVal, fVal);
+console.log(labelId);
+}
+
+function createParamFields(elemId,elemVal, index){
+    $("#maindiv"+index).remove();
+    var paramString = (elemVal.split("("))[1];
+    var params=[];
+    params = paramString.split(",");
+    $("#rParamDiv_"+index).show();
+    var parentDiv = document.getElementById("rParamDiv_"+index);
+    var maindiv= document.createElement('div');
+    maindiv.id = "maindiv_"+index;
+    parentDiv.appendChild(maindiv);
+    for(var i=0; i<params.length; i++){
+            var newdiv = document.createElement('div');
+            newdiv.id = "div";
+            newdiv.innerHTML = "<label id='rPLabel"+index+"_" +i+"'>params label</label><input type='text' id='rParam"+index+"_" + i + "' class='form-control form-control-sm' style=\"width:89.5%; display:inline;\" onblur='addReaderParamValues(this.id)'>"
+            maindiv.appendChild(newdiv);
+            $("#rPLabel"+index+"_"+i).text(params[i].replace(")", ""));
+        }
+
 }
 
 function addWriter(elemId) {
     var elemVal = $("#"+elemId).val();
     var index = getElemIdSeq(elemId);
-    writer[index] = elemVal;
+   writerObj = {};
+        writerObj.value = elemVal;
+        writerObj.params = [];
+        writer[index] = writerObj;
+
+    if(elemVal !== "" ) {
+        createWParamFields(elemId,elemVal, index);
+    }else{
+        $("#wmaindiv").remove();
+        $("#wParamDiv").hide();
+    }
+
     console.log("addWriter method, element Id : "+elemId +" Index : "+index);
+}
+
+function addWriterParamValues(fId){
+var labelId = $("#"+fId)[0].previousSibling.id;
+var labelVal = $("#"+labelId)[0].innerHTML;
+var fVal = $("#"+fId).val();
+writerObj.params.push({"label": labelVal, "value":fVal});
+console.log(labelId);
+}
+
+function createWParamFields(elemId,elemVal, index){
+
+    $("#wmaindiv"+index).remove();
+    var paramString = (elemVal.split("("))[1];
+    var params=[];
+    params = paramString.split(",");
+    $("#wParamDiv_"+index).show();
+    var parentDiv = document.getElementById("wParamDiv_"+index);
+    var maindiv= document.createElement('div');
+    maindiv.id = "wmaindiv_"+index;
+    parentDiv.appendChild(maindiv);
+    for(var i=0; i<params.length; i++){
+            var newdiv = document.createElement('div');
+            newdiv.id = "div";
+            newdiv.innerHTML = "<label id='wPLabel"+index+"_" +i+"'>params label</label><input type='text' id='wParam"+index+"_" + i + "' class='form-control form-control-sm' style=\"width:89.5%; display:inline;\" onblur='addWriterParamValues(this.id)'>"
+            maindiv.appendChild(newdiv);
+            $("#wPLabel"+index+"_"+i).text(params[i].replace(")", ""));
+        }
 }
 
 function openConfigureDialog(cd){
@@ -70,22 +192,39 @@ function openConfigureDialog(cd){
     }
     var rLength = cd[3].length;
     for(var i=0; i<rLength; i++) {
-        $('#reader_' +i).val((cd[3])[i]);
-        reader[i] = (cd[3])[i];
-    }
+        var rObj = (cd[3])[i];
+        var rDropValue = rObj.value;
+        var rParams = rObj.params;
+        $('#reader_' +i).val(rDropValue);
+        for(var k=0; k<rParams.length; k++) {
+            $("#rParam" + i + "_" + k).val(rParams[k].value);
+        }
+        }
     var pLength = cd[4].length;
     for(var i=0; i<pLength; i++) {
-        $('#processor_' +i).val((cd[4])[i]);
-        processor[i] = (cd[4])[i]
+        var pObj = (cd[4])[i];
+        var pDropValue = pObj.value;
+        $('#processor_' +i).val(pDropValue);
+        var pParams = pObj.params;
+        for(var k=0; k<pParams.length; k++) {
+            $("#pParam" + i + "_" + k).val(pParams[k].value);
+        }
     }
     var wLength = cd[5].length;
     for(var i=0; i<wLength; i++) {
-        $('#writer_' +i).val((cd[5])[i]);
-        writer[i] = (cd[5])[i];
+        var wObj = (cd[5])[i];
+        var wDropValue = wObj.value;
+        $('#writer_' +i).val(wDropValue);
+        var wParams = wObj.params;
+        for(var k=0; k<wParams.length; k++) {
+            $("#wParam" + i + "_" + k).val(wParams[k].value);
+        }
     }
 }
 
 $(document).ready( function () {
+
+    modalHtml = $(".modal").html();
 
         $("#workflow").submit( function(e) {
             console.log("workflow submit function called");
@@ -96,14 +235,14 @@ $(document).ready( function () {
 
             $.ajax({
                 type: "GET",
-                url: '/workflowdata',
-                data: { blogdata :blog},
+                url: "/workflowStepDetail",
+                data: {blogData : JSON.stringify(blog)},
                 dataType: "json",
                 success:function(data){
                     console.log("Final Data sent to backend : "+data);
             },
-            error:function(){
-                alert("data not received");
+            error:function(xhr, status, error){
+                console.log("status="+status+",xhr="+xhr.responseText+",errth="+error);
             }
 
             })
@@ -138,8 +277,12 @@ $(document).ready( function () {
                 configure.push(writer);
                 step.push(configure);
             }
-            modal.style.display = "none";
+            $(".modal").modal("hide");
         });
+
+        /*$(".modal").on("hidden.bs.modal", function () {
+    $('.modal').html("");
+    });*/
 
         $(document).on('click', '.myconfigure', function() {
         stepid=$(this).parent().find('input').val();
@@ -150,17 +293,19 @@ $(document).ready( function () {
             configure = [];
             document.getElementById("workflowStepDetail").reset();
 
-
             // below code is modal code
 
             var modal = document.getElementById("myModal");
-
+                /*if(modal.innerHTML === ""){
+                    $(".modal").html(modalHtml);
+                }*/
             // Get the button that opens the modal
 
 
             // Get the <span> element that closes the modal
             var span = document.getElementsByClassName("close")[0];
-            modal.style.display = "block";
+            //modal.style.display = "block";
+            $(".modal").modal("show");
             name = $('#name').val();
 
             document.getElementById("stepname").value = stepid;
@@ -178,6 +323,10 @@ $(document).ready( function () {
             processor = [];
             reader = [];
             writer = [];
+            //readerParamMap = new Map();
+            readerMap = new Map();
+            processorMap = new Map();
+            writerMap = new Map();
 
             if (step.length !== 0 && stepNameFromArray === stepid) {
                 openConfigureDialog(configData);
@@ -236,7 +385,8 @@ var modal = document.getElementById("myModal");
 var span = document.getElementsByClassName("close")[0];
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
-  modal.style.display = "none";
+  //modal.style.display = "none";
+    $("#myModal").modal("hide");
 
 }
 
@@ -244,7 +394,8 @@ span.onclick = function() {
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
   if (event.target == modal) {
-    modal.style.display = "none";
+    //modal.style.display = "none";
+      $("#myModal").modal("hide");
   }
 }
 
@@ -262,21 +413,34 @@ jQuery(document).ready( function () {
         $("#append_Reader").click( function(e) {
          e.preventDefault();
          readerid=readerid+1;
-        $(".mydivReader").append('<div class="controls"><select name="Select_reader[]" id="reader_' +readerid+ '" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="addReader(this.id)"><option value="Select Reader">Select Reader</option><option value="Firefox">Firefox</option><option value="Chrome">Chrome</option><option value="Opera">Opera</option><option value="Safari">Safari</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+        $("#rParamDiv_"+(readerid-1)).after('<div class="controls"><select name="Select_reader[]" id="reader_' +readerid+ '" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="addReader(this.id)"><option value="">Select reader</option><option value="OracleDataRead(SOURCEIDENTIFIER,SOURCENAME,GETSOURCESQL)">OracleDataRead(SOURCEIDENTIFIER,SOURCENAME,GETSOURCESQL)</option>\n' +
+            '    <option value="CSVDataRead(SOURCEIDENTIFIER,SOURCEFILENAME,FILEPATH)">CSVDataRead(SOURCEIDENTIFIER,SOURCEFILENAME,FILEPATH)</option>\n' +
+            '    <option value="EXCELDataRead(SOURCEIDENTIFIER,SOURCEFILEPATH,PATTERN)">EXCELDataRead(SOURCEIDENTIFIER,SOURCEFILEPATH,PATTERN)</option>\n' +
+            '    <option value="SftpRead(SOURCEREMOTESERVERNAME,SOURCEREMOTEPORTNO,SOURCEREMOTEUSERNAME,SOURCEREMOTEPASSWORD,SOURCELOCALFILEPATH,SOURCEREMOTEFILENAME)">SftpRead(SOURCEREMOTESERVERNAME,SOURCEREMOTEPORTNO,SOURCEREMOTEUSERNAME,SOURCEREMOTEPASSWORD,SOURCELOCALFILEPATH,SOURCEREMOTEFILENAME)</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>' +
+            '<div class=\'form-group mydivReaderParam\' id="rParamDiv_' +readerid+ '"></div>');
         return false;
         });
 
         $("#append_Processor").click( function(e) {
          e.preventDefault();
          processorid=processorid+1;
-        $(".mydivProcessor").append('<div class="controls"><select name="selectProcessor[]" id="processor_' +processorid+ '" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="addProcessor(this.id)"><option value="Select processor">Select processor</option><option value="Firefox">Firefox</option><option value="Chrome">Chrome</option><option value="Opera">Opera</option><option value="Safari">Safari</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+        $("#pParamDiv_"+(processorid-1)).after('<div class="controls"><select name="selectProcessor[]" id="processor_' +processorid+ '" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="addProcessor(this.id)"><option value="">Select processor</option>\n' +
+            '    <option value="PythonDataProcessor(SCRIPTNAME,METHOD)">PythonDataProcessor(SCRIPTNAME,METHOD)</option>\n' +
+            '    <option value="FileChecker(FOLDERPATH,PATTERN,SCHEDULESTOPPER)">FileChecker(FOLDERPATH,PATTERN,SCHEDULESTOPPER)</option>\n' +
+            '    <option value="FILEMOVEPROCCESOR(SOURCEFILENAME,TARGETFILENAME,MOVETYPE,PATTERN)">FILEMOVEPROCCESOR(SOURCEFILENAME,TARGETFILENAME,MOVETYPE,PATTERN)</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>'+
+        '<div class=\'form-group mydivProcessorParam\' id="pParamDiv_' +processorid+ '"></div>');
         return false;
         });
 
         $("#append_Writer").click( function(e) {
          e.preventDefault();
          writerid=writerid+1;
-        $(".mydivWriter").append('<div class="controls"><select name="selectWriter[]" id="writer_' +writerid+ '" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="addWriter(this.id)"><option value="Select Writer">Select writer</option><option value="Firefox">Firefox</option><option value="Chrome">Chrome</option><option value="Opera">Opera</option><option value="Safari">Safari</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>');
+        $("#wParamDiv_"+(writerid-1)).after('<div class="controls"><select name="selectWriter[]" id="writer_' +writerid+ '" class="form-control form-control-sm" style="width:89.5%; display:inline;" onblur="addWriter(this.id)"><option value="">Select Writer</option>\n' +
+            '    <option value="EXCELDATAWRITER(INPUTSOURCEFORWRITER,FILENAME,FILEPATH,SHEETNAME,HEADERREQUIRED)">EXCELDATAWRITER(INPUTSOURCEFORWRITER,FILENAME,FILEPATH,SHEETNAME,HEADERREQUIRED)</option>\n' +
+            '    <option value="CSVDataWrite(INPUTSOURCEFORWRITER,TARGETFILENAME,TARGETDELIMITER,FILEPATH)">CSVDataWrite(INPUTSOURCEFORWRITER,TARGETFILENAME,TARGETDELIMITER,FILEPATH)</option>\n' +
+            '    <option value="OracleDataWrite(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST)">OracleDataWrite(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST)</option>\n' +
+            '    <option value="OracleDataDelInsert(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST,DELETEKEY)">OracleDataDelInsert(INPUTSOURCE,TARGETNAME,TARGETTABLENAME,TARGETCOLUMNLIST,DELETEKEY)</option></select>  <a href="#"  style="display:inline;" class="remove_this btn btn-danger btn-sm active" role="button" aria-pressed="true">Remove</a> <br/><br/></div>'+
+        '<div class=\'form-group mydivWriterParam\' id="wParamDiv_' +writerid+ '"></div>');
         return false;
         });
 
